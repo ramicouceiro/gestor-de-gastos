@@ -37,6 +37,13 @@ export function SavingsCard({ className } : DashboardCardProps) {
         actual: 50,
         target: 100
     });
+    userSavings.push({
+        saving_id: 3,
+        user_id: 1,
+        category: "Ropa",
+        actual: 200,
+        target: 500
+    });
     if(userSavings.length === 0){
         return(
             <Card className={`${className} h-fit`}>
