@@ -21,7 +21,6 @@ export default function DashboardPage() {
         breakpointCols={breakpointColumns}
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column">
-        {/* Tarjetas */}
         <TotalAmountCard />
         <IncomeCard />
         <ExpenseCard />

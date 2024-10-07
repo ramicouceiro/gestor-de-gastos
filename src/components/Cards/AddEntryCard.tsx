@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Card from "./Card";
-import { Link } from 'react-router-dom';
 
 interface ClassnameProps {
     className?: string;
@@ -31,10 +30,7 @@ export default function AddEntryCard({ className }: ClassnameProps) {
                     <option value="Income">Ingreso</option>
                 </select>
                 <div className="flex gap-5 w-full justify-center mt-5">
-                    <Link to={"/"}>
-                        <button className="font-bold shadow-neomorphic rounded-xl p-4 text-red-500 hover:shadow-neomorphicInset hover:scale-95 transition-transform duration-150 ease-in-out">CANCELAR</button>
-                    </Link>
-                    <button onClick={handleSubmit} className="font-bold shadow-neomorphic rounded-xl p-4 hover:shadow-neomorphicInset hover:scale-95 transition-transform duration-150 ease-in-out">AGREGAR</button>
+                <button onClick={handleSubmit} className="font-bold shadow-neomorphic rounded-xl p-4 hover:shadow-neomorphicInset hover:scale-95 transition-transform duration-150 ease-in-out">AGREGAR</button>
                 </div>
             </form>
         </Card>
