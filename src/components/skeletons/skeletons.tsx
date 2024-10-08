@@ -1,4 +1,4 @@
-export function CardSkeleton() {
+export const CardSkeleton = () => {
     return (
         <div className="p-6 flex flex-col h-full animate-pulse">
             <div className="flex flex-col justify-center gap-4 mb-4">
@@ -11,4 +11,26 @@ export function CardSkeleton() {
             </div>
         </div>
     );
+}
+
+export const TransactionsSkeleton = () => {
+    return(
+        <div className="p-6 flex flex-col gap-4">
+            <div className="h-4 bg-gray-400 rounded w-1/4 mb-4"></div>
+            <div className="overflow-y-auto max-h-48 custom-scrollbar pr-4">
+                <ul className="flex flex-col gap-3">
+                    <li className="p-4 flex justify-between items-center rounded-lg shadow-neomorphicInset">
+                        <div className="w-16 h-4 bg-gray-400 rounded"></div>
+                        <div className="w-24 h-4 bg-gray-400 rounded"></div>
+                        <div className="w-20 h-4 bg-gray-400 rounded"></div>
+                    </li>
+                    <li className="p-4 flex justify-between items-center rounded-lg shadow-neomorphicInset">
+                        <div className="w-16 h-4 bg-gray-400 rounded"></div>
+                        <div className="w-24 h-4 bg-gray-400 rounded"></div>
+                        <div className="w-20 h-4 bg-gray-400 rounded"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    )
 }
