@@ -33,68 +33,68 @@ export default function SignUp({ onSignUp }: SignUpProps) {
   };
 
   return (
-    <Card className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30%] p-10">
-      <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <Card className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[70%] md:w-[60%] lg:w-[50%] xl:w-[40%] p-4 sm:p-6 md:p-8 lg:p-10">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center">Sign Up</h2>
+      <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
         <div>
-          <label htmlFor="username" className="block mb-1 font-semibold">Username</label>
+          <label htmlFor="username" className="block mb-1 font-semibold text-sm sm:text-base">Username</label>
           <input
             type="text"
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-3 border rounded-xl focus:outline-none shadow-neomorphicInset"
+            className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"
             required
           />
         </div>
         <div>
-          <label htmlFor="password" className="block mb-1 font-semibold">Password</label>
+          <label htmlFor="password" className="block mb-1 font-semibold text-sm sm:text-base">Password</label>
           <input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 border rounded-xl focus:outline-none shadow-neomorphicInset"
+            className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"
             required
           />
         </div>
         <div>
-          <label htmlFor="email" className="block mb-1 font-semibold">Email</label>
+          <label htmlFor="email" className="block mb-1 font-semibold text-sm sm:text-base">Email</label>
           <input
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border rounded-xl focus:outline-none shadow-neomorphicInset"
+            className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"
             required
           />
         </div>
         <div>
-          <label htmlFor="name" className="block mb-1 font-semibold">Name</label>
+          <label htmlFor="name" className="block mb-1 font-semibold text-sm sm:text-base">Name</label>
           <input
             type="text"
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full p-3 border rounded-xl focus:outline-none shadow-neomorphicInset"
+            className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"
             required
           />
         </div>
         <div>
-          <label htmlFor="surname" className="block mb-1 font-semibold">Surname</label>
+          <label htmlFor="surname" className="block mb-1 font-semibold text-sm sm:text-base">Surname</label>
           <input
             type="text"
             id="surname"
             value={surname}
             onChange={(e) => setSurname(e.target.value)}
-            className="w-full p-3 border rounded-xl focus:outline-none shadow-neomorphicInset"
+            className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"
             required
           />
         </div>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 text-sm sm:text-base">{error}</p>}
         <button
           type="submit"
-          className="w-full py-2 px-4 shadow-neomorphic rounded-xl hover:shadow-neomorphicInset hover:scale-95 transition-transform duration-150 ease-in-out"
+          className="w-full py-2 px-4 shadow-neomorphic rounded-xl hover:shadow-neomorphicInset hover:scale-95 transition-transform duration-150 ease-in-out text-sm sm:text-base"
         >
           Sign Up
         </button>
