@@ -1,5 +1,6 @@
 import { getCurrentUserId, logout } from '../../utils/services/authService';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   HomeIcon,
   ArrowDownIcon,
@@ -17,9 +18,10 @@ const links = [
 ];
 
 export default function Sidenav({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (isOpen: boolean) => void }) {
+  const navigate = useNavigate();
   const handleLogout = async () => {
     await logout();
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   const toggleSidenav = () => {
