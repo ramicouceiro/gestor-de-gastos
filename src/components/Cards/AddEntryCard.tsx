@@ -52,8 +52,8 @@ export default function AddEntryCard({ className }: ClassnameProps) {
     };
 
     return (
-        <Card className={`${className} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30%] p-10`}>
-            <form className="flex flex-col gap-4 select-none" onSubmit={handleSubmit}>
+        <Card className={`${className} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[70%] md:w-[50%] lg:w-[40%] xl:w-[30%] p-4 sm:p-6 md:p-8 lg:p-10`}>
+            <form className="flex flex-col gap-3 sm:gap-4 select-none" onSubmit={handleSubmit}>
                 <label htmlFor="Amount" className='font-bold'>Monto</label>
                 <input name="Amount" type="number" className="rounded-xl bg-transparent border-primary text-primary p-3 shadow-neomorphicInset focus:outline-none focus:border-none" onChange={handleAmountChange} />
                 <label htmlFor="Currency" className='font-bold'>Moneda</label>
@@ -73,8 +73,8 @@ export default function AddEntryCard({ className }: ClassnameProps) {
                     <option value="EXPENSE">Gasto</option>
                     <option value="INCOME">Ingreso</option>
                 </select>
-                <div className="flex gap-5 w-full justify-center mt-5">
-                    <button type="submit" className="font-bold shadow-neomorphic rounded-xl p-4 hover:shadow-neomorphicInset hover:scale-95 transition-transform duration-150 ease-in-out">AGREGAR</button>
+                <div className="flex gap-3 sm:gap-5 w-full justify-center mt-4 sm:mt-5">
+                    <button type="submit" className="font-bold shadow-neomorphic rounded-xl p-3 sm:p-4 hover:shadow-neomorphicInset hover:scale-95 transition-transform duration-150 ease-in-out text-sm sm:text-base">AGREGAR</button>
                 </div>
             </form>
         </Card>

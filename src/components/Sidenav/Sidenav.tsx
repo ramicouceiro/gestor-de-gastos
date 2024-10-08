@@ -84,7 +84,7 @@ export default function Sidenav({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
             className={`${buttonClasses} mt-auto transition-all duration-150 ease-in-out`}
           >
             <div className={`transition-all duration-150 ease-in-out w-full h-full flex items-center justify-center py-3 px-4 hover:scale-95`}>
-              <b>Logout</b>
+              <b className='text-red-500'>Logout</b>
             </div>
           </button>
         </aside>
