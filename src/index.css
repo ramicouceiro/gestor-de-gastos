@@ -102,20 +102,9 @@ body {
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-  .custom-scrollbar::-webkit-scrollbar-button {
-    
+  
+  .dashboard-grid{
+    display: grid;
+    grid-auto-flow: dense;
   }
-
-  .my-masonry-grid {
-    display: flex;
-    margin-left: -30px; /* ajustar según tu espacio */
-    width: auto;
-  }
-  .my-masonry-grid_column {
-    padding-left: 30px; /* ajustar según tu espacio */
-    background-clip: padding-box;
-  }
-  .my-masonry-grid_column > div {
-    margin-bottom: 30px; /* ajustar según tu espacio */
-  }  
 }

@@ -2,7 +2,7 @@ import Card from "./Card";
 import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 import MonthlyChangeText from "./MonthlyChangeText";
 import { useEffect, useState } from "react";
-import { getArsTotalAmount } from "../../test";
+import { getUserMonthlyIncomeOrExpense } from "../../utils/services/currenciesService";
 import { CardSkeleton } from "../skeletons/skeletons";
 
 interface ClassnameProps {
@@ -10,16 +10,32 @@ interface ClassnameProps {
 }
 
 export default function IncomeCard({ className }: ClassnameProps) {
-    const actualMonthName = new Date().toLocaleString('es-ES', { month: 'long' });
+        const actualMonthName = new Date().toLocaleString('es-ES', { month: 'long' });
+    const actualMonth = new Date().getMonth() + 1;
+    const actualYear = new Date().getFullYear();
+    const previousMonth = actualMonth === 1 ? 12 : actualMonth - 1;
+    const previousMonthYear = actualMonth === 1 ? actualYear - 1 : actualYear;
+    
     const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
-    const [monthlyChange, setMonthlyChange] = useState<number | null>(null);
+    const [monthlyChangePercentage, setMonthlyChangePercentage] = useState<number | null>(null);
+    
     useEffect(() => {
-        const promise = getArsTotalAmount();
-        promise.then((totalAmount) => {
-            setMonthlyIncome(totalAmount as number);
-            setMonthlyChange(totalAmount as number - 999990);
-        });
-    }, []);
+        const fetchIncomes = async () => {
+            const currentIncome = await getUserMonthlyIncomeOrExpense('INCOME', actualMonth, actualYear) as number;
+            const previousIncome = await getUserMonthlyIncomeOrExpense('INCOME', previousMonth, previousMonthYear) as number;
+    
+            setMonthlyIncome(currentIncome);
+    
+            if (previousIncome !== 0) {
+                const percentageChange = (currentIncome - previousIncome);
+                setMonthlyChangePercentage(percentageChange);
+            } else {
+                setMonthlyChangePercentage(null);
+            }
+        };
+    
+        fetchIncomes();
+    }, [actualMonth, actualYear, previousMonth, previousMonthYear]);
     return (
         <Card className={`${className}`}>
             {monthlyIncome === null ? (<CardSkeleton/>) : ( 
@@ -32,7 +48,7 @@ export default function IncomeCard({ className }: ClassnameProps) {
                     </div>
                     <div className="mt-auto">
                         <p className="text-3xl font-bold mb-1">${monthlyIncome?.toLocaleString()}</p>
-                        <MonthlyChangeText type="INCOME" monthlyChange={monthlyChange} />
+                        <MonthlyChangeText type="INCOME" monthlyChange={monthlyChangePercentage} />
                     </div>
                 </div>
             )}

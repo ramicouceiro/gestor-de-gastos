@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Card from "./Card";
 import { WalletIcon } from "@heroicons/react/24/outline";
-import { getArsTotalAmount } from "../../test";
+import { getArsTotalAmount } from "../../utils/services/currenciesService";
 import { CardSkeleton } from "../skeletons/skeletons";
 
 interface ClassnameProps {
@@ -31,7 +31,7 @@ export default function TotalAmountCard({ className }: ClassnameProps) {
                     </div>
                     <div className="mt-auto">
                         <p className="text-3xl font-bold mb-1">${totalAmount?.toLocaleString()}</p>
-                        <p className="text-sm opacity-80">Calculado en base a tus balances en ARS y USD</p>
+                        <p className="text-sm opacity-80">En base a tus balances en ARS y USD</p>
                     </div>
                 </div>
             )}

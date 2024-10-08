@@ -2,7 +2,7 @@ import Card from "./Card";
 import { DocumentMinusIcon } from "@heroicons/react/24/outline";
 import MonthlyChangeText from "./MonthlyChangeText";
 import { useEffect, useState } from "react";
-import { getArsTotalAmount } from "../../test";
+import { getUserMonthlyIncomeOrExpense } from "../../utils/services/currenciesService";
 import { CardSkeleton } from "../skeletons/skeletons";
 
 interface ClassnameProps {
@@ -11,15 +11,32 @@ interface ClassnameProps {
 
 export default function ExpenseCard({ className }: ClassnameProps) {
     const actualMonthName = new Date().toLocaleString('es-ES', { month: 'long' });
+    const actualMonth = new Date().getMonth() + 1;
+    const actualYear = new Date().getFullYear();
+    const previousMonth = actualMonth === 1 ? 12 : actualMonth - 1;
+    const previousMonthYear = actualMonth === 1 ? actualYear - 1 : actualYear;
+
     const [monthlyExpense, setMonthlyExpense] = useState<number | null>(null);
-    const [monthlyChange, setMonthlyChange] = useState<number | null>(null);
+    const [monthlyChangePercentage, setMonthlyChangePercentage] = useState<number | null>(null);
+
     useEffect(() => {
-        const promise = getArsTotalAmount();
-        promise.then((totalAmount) => {
-            setMonthlyExpense(totalAmount as number);
-            setMonthlyChange(totalAmount as number - 999990);
-        });
-    }, []);
+        const fetchExpenses = async () => {
+            const currentExpense = await getUserMonthlyIncomeOrExpense('EXPENSE', actualMonth, actualYear) as number;
+            const previousExpense = await getUserMonthlyIncomeOrExpense('EXPENSE', previousMonth, previousMonthYear) as number;
+
+            setMonthlyExpense(currentExpense);
+
+            if (previousExpense !== 0) {
+                const percentageChange = (currentExpense - previousExpense);
+                setMonthlyChangePercentage(percentageChange);
+            } else {
+                setMonthlyChangePercentage(null);
+            }
+        };
+
+        fetchExpenses();
+    }, [actualMonth, actualYear, previousMonth, previousMonthYear]);
+
     return (
         <Card className={`${className}`}>
             {monthlyExpense === null ? (<CardSkeleton/>) : ( 
@@ -32,7 +49,7 @@ export default function ExpenseCard({ className }: ClassnameProps) {
                     </div>
                     <div className="mt-auto">
                         <p className="text-3xl font-bold mb-1">${monthlyExpense?.toLocaleString()}</p>
-                        <MonthlyChangeText type="INCOME" monthlyChange={monthlyChange} />
+                        <MonthlyChangeText type="EXPENSE" monthlyChange={monthlyChangePercentage} />
                     </div>
                 </div>
             )}
