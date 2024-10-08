@@ -1,4 +1,5 @@
 import supabase from "../supabase";
+import { getCurrentUserId } from './authService';
 
 export type UserCurrencies = {
     ars_amount: number;
@@ -18,11 +19,11 @@ export type UserTransaction = {
 
 
 export const getArsTotalAmount = async (): Promise<number | null> => {
-    const userId = 2;
+    const idusr = getCurrentUserId();
     const { data, error } = await supabase
         .from('usr_currencies')
         .select('ars_amount, usd_amount')
-        .eq('id', userId)
+        .eq('id', idusr)
         .single();
 
     if (error) {
@@ -38,11 +39,11 @@ export const getArsTotalAmount = async (): Promise<number | null> => {
 }
 
 export const getUserMonthlyIncomeOrExpense = async (type: string, actualMonth: number, actualYear: number) => {
-    const userId = 2;
+    const idusr = getCurrentUserId();
     const { data, error } = await supabase
         .from('usr_transactions')
         .select('*')
-        .eq('idusr', userId)
+        .eq('idusr', idusr)
         .eq('type', type)
         .gte('created_at', `${actualYear}-${actualMonth.toString().padStart(2, '0')}-01`)
         .lt('created_at', `${actualYear}-${(actualMonth + 1).toString().padStart(2, '0')}-01`)
@@ -75,11 +76,11 @@ async function getCurrencyExchangeRate(from: string, to: string): Promise<number
 }
 
 export const getUserTransactions = async (): Promise<UserTransaction[]> => {
-    const userId = 2;
+    const idusr = getCurrentUserId();
     const { data, error } = await supabase
         .from('usr_transactions')
         .select('*')
-        .eq('idusr', userId);
+        .eq('idusr', idusr);
 
     if (error) {
         console.error('Error al obtener las transacciones del usuario:', error);
@@ -90,7 +91,7 @@ export const getUserTransactions = async (): Promise<UserTransaction[]> => {
 }
 
 export const addTransaction = async (type: string, amount: number, currency: string, description: string) : Promise<boolean | null>  => {
-    const idusr = 2;
+    const idusr = getCurrentUserId();
     const transaction = {
         idusr : idusr,
         amount,
@@ -112,7 +113,7 @@ export const addTransaction = async (type: string, amount: number, currency: str
     return data;
 };
 
-export const getUserCurrencies = async (idusr: number): Promise<UserCurrencies | null> => {
+export const getUserCurrencies = async (idusr: number | null): Promise<UserCurrencies | null> => {
     const { data, error } = await supabase
         .from('usr_currencies')
         .select('ars_amount, usd_amount')
@@ -127,7 +128,7 @@ export const getUserCurrencies = async (idusr: number): Promise<UserCurrencies |
     return data as UserCurrencies;
 };
 
-export const upsertCurrenciesAmount = async (idusr: number, amount: number, currency: string, type:string) => {
+export const upsertCurrenciesAmount = async (idusr: number | null, amount: number, currency: string, type:string) => {
     const currencies : UserCurrencies = await getUserCurrencies(idusr) as UserCurrencies;
     
     if(currencies !== null) {

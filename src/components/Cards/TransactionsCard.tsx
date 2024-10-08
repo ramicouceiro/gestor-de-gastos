@@ -26,7 +26,7 @@ export default function TransactionsCard({ className }: { className?: string }) 
                     </div>
                     <div className="overflow-y-auto max-h-48 custom-scrollbar pr-4">
                         <ul className="flex flex-col gap-3">
-                            {transactions.map(transaction => (
+                            {transactions.length > 0 ? transactions.map(transaction => (
                                 <li key={transaction.id} className="p-4 flex justify-between items-center rounded-lg shadow-neomorphicInset">
                                     <span>{new Date(transaction.created_at).toLocaleDateString()}</span>
                                     <span>{transaction.label}</span>
@@ -34,7 +34,7 @@ export default function TransactionsCard({ className }: { className?: string }) 
                                         {transaction.currency}${transaction.amount.toFixed(2)}
                                     </span>
                                 </li>
-                            ))}
+                            )) : <li className="text-center text-gray-500">No transactions found</li>}
                         </ul>
                     </div>
                 </div>
