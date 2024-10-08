@@ -21,7 +21,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Or a loading spinner
+    return <div>Loading...</div>;
   }
 
   return (
