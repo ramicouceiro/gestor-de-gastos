@@ -63,7 +63,7 @@ export default function Sidenav({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
         >
           <Link to="/">
             <div className='flex flex-col justify-center items-center'>
-              <img src="./public/vite.svg" alt="logo" className='w-20 h-20' />
+              <img src="vite.svg" alt="logo" className='w-20 h-20' />
             </div>
           </Link>
           <div className="flex flex-col justify-center flex-grow gap-5">
