@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import RootLayout from './Layout';
 import DashboardPage from './pages/DashboardPage';
 import AddEntryCard from './components/Cards/AddEntryCard';
 import Login from './components/Login';
-import { getCurrentUser, User } from './utils/services/authService';
+import { getCurrentUser } from './utils/services/authService';
 import SignUp from './components/SignUp';
+import { useAppStore } from './utils/store';
 
 function App() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user, setUser } = useAppStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,20 +19,20 @@ function App() {
       setLoading(false);
     }
     loadUser();
-  }, []);
+  }, [setUser]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Cargando...</div>;
   }
 
   return (
     <RootLayout>
       <Routes>
         <Route path="/login" element={
-          user ? <Navigate to="/" /> : <Login onLogin={setUser} />
+          user ? <Navigate to="/" /> : <Login />
         } />
         <Route path="/signup" element={
-          user ? <Navigate to="/" /> : <SignUp onSignUp={setUser} />
+          user ? <Navigate to="/" /> : <SignUp />
         } />
         <Route path="/" element={
           user ? <DashboardPage /> : <Navigate to="/login" />

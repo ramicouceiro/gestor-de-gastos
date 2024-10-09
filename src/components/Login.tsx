@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { login } from '../utils/services/authService';
 import Card from './Cards/Card';
+import { useAppStore } from '../utils/store';
+import { useNavigate } from 'react-router-dom';
 
-interface LoginProps {
-  onLogin: (user: { id: number; username: string }) => void;
-}
-
-export default function Login({ onLogin }: LoginProps) {
+export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const setUser = useAppStore(state => state.setUser);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,7 +17,8 @@ export default function Login({ onLogin }: LoginProps) {
 
     const user = await login(username, password);
     if (user) {
-      onLogin(user);
+      setUser(user);
+      navigate('/');
     } else {
       setError('Invalid username or password');
     }

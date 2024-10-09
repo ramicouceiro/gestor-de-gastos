@@ -1,4 +1,5 @@
 import supabase from "../supabase";
+import { useAppStore } from "../store";
 
 export interface User {
   id: number;
@@ -19,25 +20,27 @@ export async function login(username: string, password: string): Promise<User | 
   }
 
   const user = data as User;
+  useAppStore.getState().setUser(user);
   localStorage.setItem('user', JSON.stringify(user));
   return user;
 }
 
 export async function getCurrentUser(): Promise<User | null> {
-  // First, check localStorage
-  const userString = localStorage.getItem('user');
-  if (userString) {
-    return JSON.parse(userString) as User;
+  const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+    useAppStore.getState().setUser(user);
+    return user;
   }
 
-  // If not in localStorage, check with Supabase
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
+  // Si no hay usuario en localStorage, intentamos obtenerlo de Supabase
+  const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+  if (!supabaseUser) return null;
 
   const { data, error } = await supabase
     .from('usr')
     .select('id, username')
-    .eq('id', user.id)
+    .eq('id', supabaseUser.id)
     .single();
 
   if (error) {
@@ -46,7 +49,7 @@ export async function getCurrentUser(): Promise<User | null> {
   }
 
   const userData = data as User;
-  // Store the user data in localStorage for future use
+  useAppStore.getState().setUser(userData);
   localStorage.setItem('user', JSON.stringify(userData));
   return userData;
 }
@@ -56,14 +59,13 @@ export async function logout(): Promise<void> {
   if (error) {
     console.error('Error during logout:', error);
   }
+  useAppStore.getState().setUser(null);
   localStorage.removeItem('user');
 }
 
 export function getCurrentUserId(): number | null {
-  const userString = localStorage.getItem('user');
-  if (!userString) return null;
-  const user = JSON.parse(userString) as User;
-  return user.id;
+  const user = useAppStore.getState().user;
+  return user ? user.id : null;
 }
 
 export async function signUp(username: string, password: string, email: string, name: string, surname: string): Promise<User | null> {
@@ -100,6 +102,6 @@ export async function signUp(username: string, password: string, email: string, 
   }
 
   const user = data as User;
-  localStorage.setItem('user', JSON.stringify(user));
+  useAppStore.getState().setUser(user);
   return user;
 }

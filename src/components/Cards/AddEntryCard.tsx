@@ -32,23 +32,26 @@ export default function AddEntryCard({ className }: ClassnameProps) {
         setDescription(event.target.value);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         let finalAmount = amount;
         let finalCurrency = currency;
-    
-        if(currency === 'ARS' && payedWith === 'USD') {
+
+        if (currency === 'ARS' && payedWith === 'USD') {
             finalAmount = amount / 1210;
             finalCurrency = 'USD';
-        } else if(currency === 'USD' && payedWith === 'ARS') {
+        } else if (currency === 'USD' && payedWith === 'ARS') {
             finalAmount = amount * 1210;
             finalCurrency = 'ARS';
         }
-    
-        const promise = addTransaction(entryType, finalAmount, finalCurrency, description);
-        promise.then(() => {
-            window.location.href = '/';
-        });
+
+        const newTransaction = await addTransaction(entryType, finalAmount, finalCurrency, description);
+        if (newTransaction) {
+            alert('Transacción agregada');
+            // Aquí puedes agregar lógica adicional, como redirigir al usuario o limpiar el formulario
+        } else {
+            alert('Error al agregar la transacción');
+        }
     };
 
     return (

@@ -4,6 +4,7 @@ import MonthlyChangeText from "./MonthlyChangeText";
 import { useEffect, useState } from "react";
 import { getUserMonthlyIncomeOrExpense } from "../../utils/services/currenciesService";
 import { CardSkeleton } from "../skeletons/skeletons";
+import { useAppStore } from "../../utils/store";
 
 interface ClassnameProps {
     className?: string;
@@ -21,13 +22,20 @@ export default function ExpenseCard({ className }: ClassnameProps) {
 
     useEffect(() => {
         const fetchExpenses = async () => {
-            const currentExpense = await getUserMonthlyIncomeOrExpense('EXPENSE', actualMonth, actualYear) as number;
-            const previousExpense = await getUserMonthlyIncomeOrExpense('EXPENSE', previousMonth, previousMonthYear) as number;
-
+            let currentExpense: number | null = null;
+            let previousExpense: number | null = null;
+            if(useAppStore.getState().monthlyIncomes) {
+                currentExpense = useAppStore.getState().monthlyIncomes;
+            } else {
+                currentExpense = await getUserMonthlyIncomeOrExpense('EXPENSE', actualMonth, actualYear) as number;
+                previousExpense = await getUserMonthlyIncomeOrExpense('EXPENSE', previousMonth, previousMonthYear) as number;
+                useAppStore.getState().setMonthlyIncomes(currentExpense);
+                useAppStore.getState().setLastMonthIncomes(previousExpense);
+            }
             setMonthlyExpense(currentExpense);
 
             if (previousExpense !== 0) {
-                const percentageChange = (currentExpense - previousExpense);
+                const percentageChange = (currentExpense ?? 0) - (previousExpense ?? 0);
                 setMonthlyChangePercentage(percentageChange);
             } else {
                 setMonthlyChangePercentage(null);

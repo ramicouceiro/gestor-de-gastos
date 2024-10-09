@@ -4,13 +4,14 @@ import MonthlyChangeText from "./MonthlyChangeText";
 import { useEffect, useState } from "react";
 import { getUserMonthlyIncomeOrExpense } from "../../utils/services/currenciesService";
 import { CardSkeleton } from "../skeletons/skeletons";
+import { useAppStore } from "../../utils/store";
 
 interface ClassnameProps {
     className?: string;
 }
 
 export default function IncomeCard({ className }: ClassnameProps) {
-        const actualMonthName = new Date().toLocaleString('es-ES', { month: 'long' });
+    const actualMonthName = new Date().toLocaleString('es-ES', { month: 'long' });
     const actualMonth = new Date().getMonth() + 1;
     const actualYear = new Date().getFullYear();
     const previousMonth = actualMonth === 1 ? 12 : actualMonth - 1;
@@ -21,13 +22,20 @@ export default function IncomeCard({ className }: ClassnameProps) {
     
     useEffect(() => {
         const fetchIncomes = async () => {
-            const currentIncome = await getUserMonthlyIncomeOrExpense('INCOME', actualMonth, actualYear) as number;
-            const previousIncome = await getUserMonthlyIncomeOrExpense('INCOME', previousMonth, previousMonthYear) as number;
-    
+            let currentIncome: number | null = null;
+            let previousIncome: number | null = null;
+            if(useAppStore.getState().monthlyIncomes) {
+                currentIncome = useAppStore.getState().monthlyIncomes;
+            } else {
+                currentIncome = await getUserMonthlyIncomeOrExpense('INCOME', actualMonth, actualYear) as number;
+                previousIncome = await getUserMonthlyIncomeOrExpense('INCOME', previousMonth, previousMonthYear) as number;
+                useAppStore.getState().setMonthlyIncomes(currentIncome);
+                useAppStore.getState().setLastMonthIncomes(previousIncome);
+            }
             setMonthlyIncome(currentIncome);
     
             if (previousIncome !== 0) {
-                const percentageChange = (currentIncome - previousIncome);
+                const percentageChange = (currentIncome ?? 0) - (previousIncome ?? 0);
                 setMonthlyChangePercentage(percentageChange);
             } else {
                 setMonthlyChangePercentage(null);

@@ -1,3 +1,4 @@
+import { useAppStore } from "../store";
 import supabase from "../supabase";
 import { getCurrentUserId } from './authService';
 
@@ -35,6 +36,7 @@ export const getArsTotalAmount = async (): Promise<number | null> => {
     const exchangeRate = await getCurrencyExchangeRate('USD', 'ARS');
     totalArs = totalArs + (data?.usd_amount * exchangeRate);
 
+    useAppStore.getState().setArsTotalAmount(totalArs);
     return totalArs;
 }
 
@@ -65,6 +67,12 @@ export const getUserMonthlyIncomeOrExpense = async (type: string, actualMonth: n
         return total;
     }, Promise.resolve(0));
 
+    if(type === 'INCOME') {
+        useAppStore.getState().setMonthlyIncomes(monthlyIncome);
+    } else {
+        useAppStore.getState().setMonthlyExpenses(monthlyIncome);
+    }
+
     return monthlyIncome;
 };
 
@@ -87,13 +95,14 @@ export const getUserTransactions = async (): Promise<UserTransaction[]> => {
         return [];
     }
 
+    useAppStore.getState().setTransactions(data as UserTransaction[]);
     return data as UserTransaction[];
 }
 
-export const addTransaction = async (type: string, amount: number, currency: string, description: string) : Promise<boolean | null>  => {
+export const addTransaction = async (type: string, amount: number, currency: string, description: string): Promise<UserTransaction | null> => {
     const idusr = getCurrentUserId();
     const transaction = {
-        idusr : idusr,
+        idusr: idusr,
         amount,
         currency,
         label: description,
@@ -101,17 +110,48 @@ export const addTransaction = async (type: string, amount: number, currency: str
     };
     const { data, error } = await supabase
         .from('usr_transactions')
-        .insert([{ ...transaction}]);
+        .insert([{ ...transaction }])
+        .select()
+        .single();
 
     if (error) {
         console.error('Error', error);
         return null;
     }
 
-    await upsertCurrenciesAmount(idusr, amount, currency, type);
+    if (data) {
+        await upsertCurrenciesAmount(idusr, amount, currency, type);
+        updateAppStoreAmounts(amount, currency, type);
+        const newTransaction = data as UserTransaction;
+        const currentTransactions = useAppStore.getState().transactions;
+        useAppStore.getState().setTransactions([newTransaction, ...currentTransactions]);
+        return newTransaction;
+    }
 
-    return data;
+    return null;
 };
+
+const updateAppStoreAmounts = (amount: number, currency: string, type: string) => {
+    if(currency === 'ARS' ) {
+        if(type === 'EXPENSE') {
+            useAppStore.getState().setArsTotalAmount((useAppStore.getState().arsTotalAmount ?? 0) - amount);
+            useAppStore.getState().setMonthlyExpenses((useAppStore.getState().monthlyExpenses ?? 0) - amount);
+        } else {
+            useAppStore.getState().setArsTotalAmount((useAppStore.getState().arsTotalAmount ?? 0) + amount);
+            useAppStore.getState().setMonthlyIncomes((useAppStore.getState().monthlyIncomes ?? 0) + amount);
+        }
+    } else if(currency === 'USD') {
+        if(type === 'EXPENSE') {
+            const exchangeRate = Number(getCurrencyExchangeRate('USD', 'ARS'));
+            useAppStore.getState().setArsTotalAmount(((useAppStore.getState().arsTotalAmount ?? 0) * exchangeRate) - amount);
+            useAppStore.getState().setMonthlyExpenses((useAppStore.getState().monthlyExpenses ?? 0) - amount);
+        } else {
+            const exchangeRate = Number(getCurrencyExchangeRate('USD', 'ARS'));
+            useAppStore.getState().setArsTotalAmount(((useAppStore.getState().arsTotalAmount ?? 0) * exchangeRate) + amount);
+            useAppStore.getState().setMonthlyIncomes((useAppStore.getState().monthlyIncomes ?? 0) + amount);
+        }
+    }
+}
 
 export const getUserCurrencies = async (idusr: number | null): Promise<UserCurrencies | null> => {
     const { data, error } = await supabase
@@ -135,27 +175,25 @@ export const upsertCurrenciesAmount = async (idusr: number | null, amount: numbe
         if(currency === 'ARS') {
             if(type === 'EXPENSE') {
                 currencies.ars_amount -= amount;
-            }else{
+            } else {
                 currencies.ars_amount += amount;
             }
         } else if(currency === 'USD') {
             if(type === 'EXPENSE') {
                 currencies.usd_amount -= amount;
-            }else{
+            } else {
                 currencies.usd_amount += amount;
             }
         }
     }
 
-        const { data, error } = await supabase
+    const { data, error } = await supabase
         .from('usr_currencies')
         .upsert([{ id: idusr, ars_amount: currencies.ars_amount, usd_amount: currencies.usd_amount}]);
 
-        if (error) {
-            console.error('Error al actualizar las monedas del usuario:', error);
-            return null;
-        }
-        return data;
-
-
+    if (error) {
+        console.error('Error al actualizar las monedas del usuario:', error);
+        return null;
+    }
+    return data;
 };

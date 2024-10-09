@@ -1,21 +1,28 @@
 import { useEffect, useState } from "react";
-import { UserTransaction, getUserTransactions } from "../../utils/services/currenciesService";
+import { getUserTransactions } from "../../utils/services/currenciesService";
 import Card from "./Card";
 import { TransactionsSkeleton } from "../skeletons/skeletons";
+import { useAppStore } from "../../utils/store";
 
 export default function TransactionsCard({ className }: { className?: string }) {
-    const [transactions, setTransactions] = useState<UserTransaction[]>([]);
+    const transactions = useAppStore((state) => state.transactions);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchTransactions = async () => {
-            const userTransactions = await getUserTransactions();
-            setTransactions(userTransactions.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+            if (transactions.length === 0) {
+                const userTransactions = await getUserTransactions();
+                useAppStore.getState().setTransactions(userTransactions);
+            }
             setIsLoading(false);
         };
 
         fetchTransactions();
-    }, []);
+    }, [transactions]);
+
+    const sortedTransactions = [...transactions].sort((a, b) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
 
     return (
         <Card className={`${className}`}>
@@ -26,7 +33,7 @@ export default function TransactionsCard({ className }: { className?: string }) 
                     </div>
                     <div className="overflow-y-auto max-h-48 custom-scrollbar pr-4">
                         <ul className="flex flex-col gap-3">
-                            {transactions.length > 0 ? transactions.map(transaction => (
+                            {sortedTransactions.length > 0 ? sortedTransactions.map(transaction => (
                                 <li key={transaction.id} className="p-4 flex justify-between items-center rounded-lg shadow-neomorphicInset">
                                     <span>{new Date(transaction.created_at).toLocaleDateString()}</span>
                                     <span>{transaction.label}</span>

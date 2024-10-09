@@ -4,6 +4,7 @@ import Card from "./Card";
 import { WalletIcon } from "@heroicons/react/24/outline";
 import { getArsTotalAmount } from "../../utils/services/currenciesService";
 import { CardSkeleton } from "../skeletons/skeletons";
+import { useAppStore } from "../../utils/store";
 
 interface ClassnameProps {
     className?: string;
@@ -14,10 +15,14 @@ interface ClassnameProps {
 export default function TotalAmountCard({ className }: ClassnameProps) {
     const [totalAmount, setTotalAmount] = useState<number | null>(null);
     useEffect(() => {
-        const promise = getArsTotalAmount();
+        if(useAppStore.getState().arsTotalAmount){
+            setTotalAmount(useAppStore.getState().arsTotalAmount);
+        }else{
+            const promise = getArsTotalAmount();
         promise.then((totalAmount) => {
-            setTotalAmount(totalAmount as number);
-        });
+                setTotalAmount(totalAmount as number);
+            });
+        }
     }, []);
     return (
         <Card className={`${className}`}>
