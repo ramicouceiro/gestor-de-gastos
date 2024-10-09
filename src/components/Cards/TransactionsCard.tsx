@@ -29,7 +29,7 @@ export default function TransactionsCard({ className }: { className?: string }) 
             {isLoading ? <TransactionsSkeleton  /> : (
                 <div className="p-6 flex flex-col gap-4">
                     <div className="flex flex-col justify-center gap-4 mb-4">
-                        <h3 className="text-lg font-semibold text-gray-800">Transacciones</h3>
+                        <h3 className="text-lg font-semibold text-gray-800">Transactions</h3>
                     </div>
                     <div className="overflow-y-auto max-h-48 custom-scrollbar pr-4">
                         <ul className="flex flex-col gap-3">

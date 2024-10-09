@@ -11,7 +11,7 @@ interface ClassnameProps {
 }
 
 export default function IncomeCard({ className }: ClassnameProps) {
-    const actualMonthName = new Date().toLocaleString('es-ES', { month: 'long' });
+    const actualMonthName = new Date().toLocaleString('en-US', { month: 'long' });
     const actualMonth = new Date().getMonth() + 1;
     const actualYear = new Date().getFullYear();
     const previousMonth = actualMonth === 1 ? 12 : actualMonth - 1;
@@ -52,7 +52,7 @@ export default function IncomeCard({ className }: ClassnameProps) {
                         <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white">
                             <DocumentPlusIcon className="w-6 h-6" />
                         </div>
-                        <h3 className="text-lg font-semibold">Ingresos de {actualMonthName}</h3>
+                        <h3 className="text-lg font-semibold">Incomes from {actualMonthName}</h3>
                     </div>
                     <div className="mt-auto">
                         <p className="text-3xl font-bold mb-1">${monthlyIncome?.toLocaleString()}</p>

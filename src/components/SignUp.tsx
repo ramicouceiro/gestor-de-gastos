@@ -42,6 +42,7 @@ export default function SignUp() {
           <input
             type="text"
             id="username"
+            placeholder='Use a fake username'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"
@@ -53,6 +54,7 @@ export default function SignUp() {
           <input
             type="password"
             id="password"
+            placeholder='Use a fake password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"
@@ -64,6 +66,7 @@ export default function SignUp() {
           <input
             type="email"
             id="email"
+            placeholder='Use a fake email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"
@@ -75,6 +78,7 @@ export default function SignUp() {
           <input
             type="text"
             id="name"
+            placeholder='Use a fake name'
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"
@@ -86,6 +90,7 @@ export default function SignUp() {
           <input
             type="text"
             id="surname"
+            placeholder='Use a fake surname'
             value={surname}
             onChange={(e) => setSurname(e.target.value)}
             className="w-full p-2 sm:p-3 border rounded-xl focus:outline-none shadow-neomorphicInset text-sm sm:text-base"

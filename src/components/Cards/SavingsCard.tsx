@@ -26,21 +26,21 @@ export function SavingsCard({ className } : DashboardCardProps) {
     userSavings.push({
         saving_id: 1,
         user_id: 1,
-        category: "Viajes",
+        category: "Travel",
         actual: 1000,
         target: 2000
     });
     userSavings.push({
         saving_id: 2,
         user_id: 1,
-        category: "Comida",
+        category: "Food",
         actual: 50,
         target: 100
     });
     userSavings.push({
         saving_id: 3,
         user_id: 1,
-        category: "Ropa",
+        category: "Clothes",
         actual: 200,
         target: 500
     });
@@ -49,10 +49,10 @@ export function SavingsCard({ className } : DashboardCardProps) {
             <Card className={`${className} h-fit`}>
                 <div className="p-6 flex flex-col gap-4">
                     <div className="flex flex-col justify-center gap-4 mb-4">
-                        <h3 className="text-lg font-semibold">Ahorros</h3>
+                        <h3 className="text-lg font-semibold">Savings</h3>
                     </div>
                     <div className="flex flex-col justify-center gap-4 mb-4">
-                        <p className="text-gray-500">No tienes ahorros configurados.</p>
+                        <p className="text-gray-500">You don't have savings configured.</p>
                     </div>
                 </div>
             </Card>
@@ -62,7 +62,7 @@ export function SavingsCard({ className } : DashboardCardProps) {
         <Card className={`${className} h-fit`}>
             <div className="p-6 flex flex-col gap-4 overflow-y-auto max-h-[40rem] custom-scrollbar pr-4">
                 <div className="flex flex-col justify-center gap-4 mb-4">
-                    <h3 className="text-lg font-semibold">Ahorros</h3>
+                    <h3 className="text-lg font-semibold">Savings</h3>
                 </div>
                 {
                     userSavings?.map((saving) => (
